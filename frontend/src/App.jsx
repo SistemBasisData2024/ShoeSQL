@@ -4,6 +4,7 @@ import reactLogo from './assets/react.svg';
 import viteLogo from '/vite.svg';
 import './App.css';
 import LandingPage from './LandingPage';
+import Profile from './Profile';
 
 function Login() {
   const [username, setUsername] = useState('');
