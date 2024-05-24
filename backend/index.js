@@ -15,7 +15,8 @@ app.post('/login', async (req, res) => {
   try {
     const result = await pool.query('SELECT * FROM accounts WHERE name = $1 AND password = $2', [username, password]);
     if (result.rows.length > 0) {
-      res.json({ success: true, message: 'Login successful' });
+      const user = result.rows[0];
+      res.json({ success: true, message: 'Login successful', user });
     } else {
       res.json({ success: false, message: 'Invalid credentials' });
     }
@@ -24,6 +25,7 @@ app.post('/login', async (req, res) => {
     res.status(500).json({ success: false, message: 'An error occurred' });
   }
 });
+
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);

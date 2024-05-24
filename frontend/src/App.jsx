@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { BrowserRouter as Router, Route, Routes, useNavigate } from 'react-router-dom';
+import { AuthProvider, useAuth } from './AuthContext';  // Import AuthContext
 import reactLogo from './assets/react.svg';
 import viteLogo from '/vite.svg';
 import './App.css';
@@ -11,6 +12,7 @@ function Login() {
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
   const navigate = useNavigate();
+  const { setUser } = useAuth();
 
   const handleLogin = async (event) => {
     event.preventDefault();
@@ -21,6 +23,8 @@ function Login() {
     });
     const data = await response.json();
     if (data.success) {
+      console.log('User data:', data.user); // Log data user
+      setUser(data.user);
       navigate('/landing');
     } else {
       setMessage('Invalid credentials');
@@ -37,7 +41,7 @@ function Login() {
           <img src={reactLogo} className="logo react" alt="React logo" />
         </a>
       </div>
-      <h1>Vite + React</h1>
+      <h1>ShoeSQL</h1>
       <div className="card">
         <form onSubmit={handleLogin}>
           <div>
@@ -71,14 +75,18 @@ function Login() {
   );
 }
 
+
 function App() {
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<Login />} />
-        <Route path="/landing" element={<LandingPage />} />
-      </Routes>
-    </Router>
+    <AuthProvider>  {/* Wrap the whole app with AuthProvider */}
+      <Router>
+        <Routes>
+          <Route path="/" element={<Login />} />
+          <Route path="/landing" element={<LandingPage />} />
+          <Route path="/profile" element={<Profile />} />
+        </Routes>
+      </Router>
+    </AuthProvider>
   );
 }
 

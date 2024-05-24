@@ -10,8 +10,8 @@ ReactDOM.createRoot(document.getElementById('root')).render(
   </React.StrictMode>,
 )
 
-ReactDOM.createRoot(document.getElementById('root')).render(
+/*ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <Profile />
-  </React.StrictMode>,
-)
+  </React.StrictMode>, 
+) */
