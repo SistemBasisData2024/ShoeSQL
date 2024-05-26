@@ -1,34 +1,45 @@
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import { useAuth } from './AuthContext';
 
 function Profile() {
   const [name, setName] = useState('');
   const [balance, setBalance] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const { user } = useAuth();
+
+  console.log('User from AuthContext:', user); // Log user data
 
   useEffect(() => {
     const fetchData = async () => {
       if (user) {
         try {
           console.log('Fetching data for user:', user); // Log user data
-          const response = await fetch(`http://localhost:5000/accounts/${user.id}`);
-          if (!response.ok) {
-            throw new Error('Network response was not ok');
-          }
-          const data = await response.json();
-          console.log('Fetched account data:', data); // Log fetched data
-          setName(data.name);
-          setBalance(data.balance);
+          const response = await axios.get(`http://localhost:5000/user/${user.id}`);
+          console.log('Fetched account data:', response.data); // Log fetched data
+          setName(response.data.user.name);
+          setBalance(response.data.user.balance);
         } catch (error) {
           console.error('Fetch error:', error);
+          setError(error.message);
+        } finally {
+          setLoading(false); // Set loading to false regardless of success or failure
         }
+      } else {
+        console.log('User not authenticated');
+        setLoading(false); // If user is not authenticated, set loading to false
       }
     };
     fetchData();
   }, [user]);
 
-  if (!user) {
-    return <div>Loading...</div>;
+  if (loading) {
+    return <div>Loading...</div>; // Show loading indicator
+  }
+
+  if (error) {
+    return <div>Error: {error}</div>; // Show error message
   }
 
   return (
