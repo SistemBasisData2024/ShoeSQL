@@ -45,6 +45,28 @@ app.get('/user/:id', async (req, res) => {
   }
 });
 
+app.put('/topup/:id', async (req, res) => {
+  const userId = req.params.id; // mengambil userId dari URL parameter
+  const { amount } = req.body; // mengambil amount dari body request
+
+  try {
+    const result = await pool.query('SELECT balance FROM accounts WHERE id = $1', [userId]);
+    if (result.rows.length === 0) {
+      return res.status(404).json({ success: false, message: 'User not found' });
+    }
+
+    const newBalance = parseFloat(result.rows[0].balance) + parseFloat(amount);
+
+    await pool.query('UPDATE accounts SET balance = $1 WHERE id = $2', [newBalance, userId]);
+
+    res.json({ success: true, message: 'Balance updated successfully', newBalance });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, message: 'An error occurred' });
+  }
+});
+
+
 
 
 app.listen(PORT, () => {

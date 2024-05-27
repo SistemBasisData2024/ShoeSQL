@@ -34,6 +34,8 @@ function Profile() {
     fetchData();
   }, [user]);
 
+  
+
   if (loading) {
     return <div>Loading...</div>; // Show loading indicator
   }
@@ -47,6 +49,7 @@ function Profile() {
       <h1>Profile Page</h1>
       <h2>Username: {name}</h2>
       <h2>Balance: {balance}</h2>
+      <button>top up</button>
     </div>
   );
 }
