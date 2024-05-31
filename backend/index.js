@@ -66,6 +66,44 @@ app.put('/topup/:id', async (req, res) => {
   }
 });
 
+app.get('/getShoes', async (req, res) => {
+  try {
+    const result = await pool.query('SELECT * FROM sepatu');
+    res.status(200).json({ success: true, shoes: result.rows });
+  } catch (error) {
+    console.error('Error fetching shoes:', error);
+    res.status(500).json({ success: false, message: 'An error occurred' });
+  }
+});
+
+app.post('/register', async (req, res) => {
+  const { username, password } = req.body;
+
+  if (!username || !password) {
+    return res.status(400).json({ success: false, message: 'Username and password are required' });
+  }
+
+  try {
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const result = await pool.query(
+      'INSERT INTO accounts (username, password) VALUES ($1, $2) RETURNING id, username',
+      [username, hashedPassword]
+    );
+
+    const user = result.rows[0];
+    res.status(201).json({ success: true, user });
+  } catch (error) {
+    console.error('Error registering user:', error);
+    if (error.code === '23505') { // unique_violation
+      res.status(409).json({ success: false, message: 'Username already exists' });
+    } else {
+      res.status(500).json({ success: false, message: 'An error occurred' });
+    }
+  }
+});
+
+
+
 
 
 

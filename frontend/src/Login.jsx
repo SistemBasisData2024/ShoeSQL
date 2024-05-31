@@ -28,6 +28,10 @@ function Login() {
     }
   };
 
+  const handleToRegister = () => {
+    navigate('/register');
+  };
+
   return (
     <>
       <div>
@@ -52,7 +56,7 @@ function Login() {
             />
           </div>
           <div>
-            <label htmlFor="password">Password:</label>
+            <label htmlFor="password">Password :</label>
             <input
               type="password"
               id="password"
@@ -62,11 +66,12 @@ function Login() {
             />
           </div>
           <button type="submit">Login</button>
+          <button type="button" onClick={handleToRegister}>register</button>
         </form>
         {message && <p>{message}</p>}
       </div>
       <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
+        Please Log in to your account.
       </p>
     </>
   );
