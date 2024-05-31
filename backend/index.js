@@ -5,6 +5,7 @@ const pool = require('./db/db');
 const session = require('express-session');
 const PgSession = require('connect-pg-simple')(session);
 const Pool = require('pg').Pool;
+const bcrypt = require('bcrypt');
 const app = express();
 const PORT = 5000;
 
@@ -77,23 +78,24 @@ app.get('/getShoes', async (req, res) => {
 });
 
 app.post('/register', async (req, res) => {
-  const { username, password } = req.body;
-
-  if (!username || !password) {
-    return res.status(400).json({ success: false, message: 'Username and password are required' });
-  }
+  const { name, password } = req.body;
 
   try {
-    const hashedPassword = await bcrypt.hash(password, 10);
+    // Simpan pengguna ke database
     const result = await pool.query(
-      'INSERT INTO accounts (username, password) VALUES ($1, $2) RETURNING id, username',
-      [username, hashedPassword]
+      'INSERT INTO accounts (name, password, balance) VALUES ($1, $2, $3) RETURNING id, name',
+      [name, password, 0]
     );
 
+    // Ambil pengguna yang baru didaftarkan
     const user = result.rows[0];
+
+    // Kirim respons sukses
     res.status(201).json({ success: true, user });
   } catch (error) {
     console.error('Error registering user:', error);
+
+    // Tangani kesalahan pelanggaran unik (username sudah ada)
     if (error.code === '23505') { // unique_violation
       res.status(409).json({ success: false, message: 'Username already exists' });
     } else {
@@ -101,11 +103,6 @@ app.post('/register', async (req, res) => {
     }
   }
 });
-
-
-
-
-
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);

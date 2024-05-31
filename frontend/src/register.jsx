@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useAuth } from './AuthContext';
+import { Navigate } from 'react-router-dom';
 
 function Register() {
   const [username, setUsername] = useState('');
@@ -9,6 +10,7 @@ function Register() {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   const { setUser } = useAuth();
+  const [redirectToLogin, setRedirectToLogin] = useState(false);
 
   const handleRegister = async (e) => {
     e.preventDefault();
@@ -22,18 +24,25 @@ function Register() {
     try {
       setLoading(true);
       const response = await axios.post('http://localhost:5000/register', {
-        username,
+        name: username,
         password,
       });
 
       setUser(response.data.user);
       console.log('User registered:', response.data.user);
+      setRedirectToLogin(true);
     } catch (error) {
       console.error('Registration error:', error);
       setError(error.response?.data?.message || 'Registration failed');
     } finally {
       setLoading(false);
     }
+
+    if (redirectToLogin) {
+      return <Navigate to="/" />;
+    }
+    
+    
   };
 
   return (
@@ -71,7 +80,7 @@ function Register() {
           />
         </div>
         {error && <div style={{ color: 'red' }}>{error}</div>}
-        <button type="submit" disabled={loading}>
+        <button onClick={handleRegister} type="submit" disabled={loading}>
           {loading ? 'Registering...' : 'Register'}
         </button>
       </form>
