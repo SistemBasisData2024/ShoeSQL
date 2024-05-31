@@ -1,9 +1,24 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
-import Login from './Login';
+import ShoeCard from './ShoeCard'; // Import ShoeCard
 
 function LandingPage() {
+  const [shoes, setShoes] = useState([]);
+
+  useEffect(() => {
+    const fetchShoes = async () => {
+      try {
+        const response = await axios.get('http://localhost:5000/shoes');
+        setShoes(response.data);
+      } catch (error) {
+        console.error('Error fetching shoes:', error);
+      }
+    };
+
+    fetchShoes();
+  }, []);
+
   return (
     <div>
       <nav className="bg-white border-gray-200 dark:bg-gray-900">
@@ -38,6 +53,11 @@ function LandingPage() {
       </nav>
       <h1>Welcome to the ShoeSQL!</h1>
       <p>You have successfully logged in.</p>
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-4">
+        {shoes.map((shoe) => (
+          <ShoeCard key={shoe.id_sepatu} shoe={shoe} />
+        ))}
+      </div>
     </div>
   );
 }

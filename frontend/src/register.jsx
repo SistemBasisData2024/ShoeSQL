@@ -39,7 +39,7 @@ function Register() {
     }
 
     if (redirectToLogin) {
-      return <Navigate to="/" />;
+      navigate('/');
     }
     
     
