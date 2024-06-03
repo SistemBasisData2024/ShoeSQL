@@ -67,7 +67,7 @@ app.put('/topup/:id', async (req, res) => {
   }
 });
 
-app.get('/getShoes', async (req, res) => {
+/*app.get('/getShoes', async (req, res) => {
   try {
     const result = await pool.query('SELECT * FROM sepatu');
     res.status(200).json({ success: true, shoes: result.rows });
@@ -75,7 +75,7 @@ app.get('/getShoes', async (req, res) => {
     console.error('Error fetching shoes:', error);
     res.status(500).json({ success: false, message: 'An error occurred' });
   }
-});
+}); */
 
 app.post('/register', async (req, res) => {
   const { name, password } = req.body;
@@ -104,6 +104,7 @@ app.post('/register', async (req, res) => {
   }
 });
 
+//api untuk list sepatu
 app.get('/shoes', async (req, res) => {
   try {
     const result = await pool.query('SELECT * FROM sepatu');
@@ -111,6 +112,20 @@ app.get('/shoes', async (req, res) => {
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server error');
+  }
+});
+
+app.post('/shoes', async (req, res) => {
+  const { name, brand, price } = req.body;
+  try {
+    const result = await pool.query(
+      'INSERT INTO sepatu (nama, brand, harga) VALUES ($1, $2, $3) RETURNING *',
+      [name, brand, price]
+    );
+    res.status(201).json(result.rows[0]);
+  } catch (error) {
+    console.error('Error adding shoe:', error);
+    res.status(500).json({ success: false, message: 'An error occurred' });
   }
 });
 
