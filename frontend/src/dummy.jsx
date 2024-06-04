@@ -1,50 +1,36 @@
-import React, { useState } from "react";
-import axios from "axios";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "./AuthContext";
-import { Navigate } from "react-router-dom";
+import reactLogo from "./assets/react.svg";
+import viteLogo from "/vite.svg";
 import logoSql from "./assets/logoShoesql.jpg";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import "./App.css";
 
-function Register() {
+function dummy() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState("");
+  const navigate = useNavigate();
   const { setUser } = useAuth();
-  const [redirectToLogin, setRedirectToLogin] = useState(false);
 
-  const handleRegister = async (e) => {
-    toast.success("Registered successfully");
-    e.preventDefault();
-    setError(null);
-
-    if (password !== confirmPassword) {
-      setError("Passwords do not match");
-      return;
+  const handleLogin = async (event) => {
+    event.preventDefault();
+    const response = await fetch("http://localhost:5000/dummy", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username, password }),
+    });
+    const data = await response.json();
+    if (data.success) {
+      setUser(data.user);
+      navigate("/landing");
+    } else {
+      setMessage("Invalid credentials");
     }
+  };
 
-    try {
-      setLoading(true);
-      const response = await axios.post("http://localhost:5000/register", {
-        name: username,
-        password,
-      });
-
-      setUser(response.data.user);
-      console.log("User registered:", response.data.user);
-      setRedirectToLogin(true);
-    } catch (error) {
-      console.error("Registration error:", error);
-      setError(error.response?.data?.message || "Registration failed");
-    } finally {
-      setLoading(false);
-    }
-
-    if (redirectToLogin) {
-      navigate("/");
-    }
+  const handleToRegister = () => {
+    navigate("/register");
   };
 
   return (
@@ -59,7 +45,7 @@ function Register() {
 
       <div className="lg:p-36 md:p-52 sm:20 p-8 w-full lg:w-1/2">
         <h1 className="text-2xl font-semibold mb-4">Register Your Account</h1>
-        <form onSubmit={handleRegister}>
+        <form onSubmit={handleToRegister}>
           <div className="mb-4">
             <label for="username" className="block text-gray-600">
               Username
@@ -109,7 +95,7 @@ function Register() {
           </div>
 
           <button
-            onClick={handleRegister}
+            onClick={handleToRegister}
             type="submit"
             className="bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-md py-2 px-4 w-full"
           >
@@ -117,20 +103,8 @@ function Register() {
           </button>
         </form>
       </div>
-      <ToastContainer
-        position="bottom-center"
-        autoClose={1500}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss={false}
-        draggable
-        pauseOnHover
-        theme="dark"
-      />
     </div>
   );
 }
 
-export default Register;
+export default dummy;

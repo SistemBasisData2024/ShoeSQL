@@ -1,79 +1,110 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useAuth } from './AuthContext';
-import reactLogo from './assets/react.svg';
-import viteLogo from '/vite.svg';
-import './App.css';
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "./AuthContext";
+import reactLogo from "./assets/react.svg";
+import viteLogo from "/vite.svg";
+import logoSql from "./assets/logoShoesql.jpg";
+import "./App.css";
 
 function Login() {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [message, setMessage] = useState('');
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [message, setMessage] = useState("");
   const navigate = useNavigate();
   const { setUser } = useAuth();
 
   const handleLogin = async (event) => {
     event.preventDefault();
-    const response = await fetch('http://localhost:5000/login', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+    const response = await fetch("http://localhost:5000/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ username, password }),
     });
     const data = await response.json();
     if (data.success) {
       setUser(data.user);
-      navigate('/landing');
+      navigate("/landing");
     } else {
-      setMessage('Invalid credentials');
+      setMessage("Invalid credentials");
     }
   };
 
   const handleToRegister = () => {
-    navigate('/register');
+    navigate("/register");
   };
 
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank" rel="noopener noreferrer">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank" rel="noopener noreferrer">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <div className="bg-gray-100 flex justify-center items-center h-screen">
+      <div className="w-1/2 h-screen hidden lg:block">
+        <img
+          src={logoSql}
+          alt="Placeholder Image"
+          className="object-cover w-full h-full"
+        />
       </div>
-      <h1>ShoeSQL</h1>
-      <div className="card">
+
+      <div className="lg:p-36 md:p-52 sm:20 p-8 w-full lg:w-1/2">
+        <h1 className="text-2xl font-semibold mb-4">Welcome to ShoeSQL</h1>
         <form onSubmit={handleLogin}>
-          <div>
-            <label htmlFor="username">Username:</label>
+          <div className="mb-4">
+            <label for="username" className="block text-gray-600">
+              Username
+            </label>
             <input
               type="text"
               id="username"
+              name="username"
+              className="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-blue-500"
+              autocomplete="off"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               required
             />
           </div>
-          <div>
-            <label htmlFor="password">Password :</label>
+
+          <div className="mb-4">
+            <label for="password" className="block text-gray-600">
+              Password
+            </label>
             <input
               type="password"
               id="password"
+              name="password"
+              className="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-blue-500"
+              autocomplete="off"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
             />
           </div>
-          <button type="submit">Login</button>
-          <button type="button" onClick={handleToRegister}>register</button>
+
+          <div className="mb-4 flex items-center">
+            <input
+              type="checkbox"
+              id="remember"
+              name="remember"
+              className="text-blue-500"
+            />
+            <label for="remember" className="text-gray-600 ml-2">
+              Remember Me
+            </label>
+          </div>
+
+          <button
+            type="submit"
+            className="bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-md py-2 px-4 w-full"
+          >
+            Login
+          </button>
         </form>
-        {message && <p>{message}</p>}
+
+        <div className="mt-6 text-blue-500 text-center">
+          <a href="" className="hover:underline" onClick={handleToRegister}>
+            Sign up Here
+          </a>
+        </div>
       </div>
-      <p className="read-the-docs">
-        Please Log in to your account.
-      </p>
-    </>
+    </div>
   );
 }
 
