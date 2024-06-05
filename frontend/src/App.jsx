@@ -20,6 +20,7 @@ function App() {
           <Route path="/profile" element={<Profile />} />
           <Route path="/register" element={<Register />} />
           <Route path="/dummy" element={<Dummy />} />
+          
         </Routes>
       </Router>
     </AuthProvider>
