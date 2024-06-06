@@ -1,32 +1,28 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "./AuthContext";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
 import logoSql from "./assets/logoShoesql.jpg";
 import "./App.css";
+import axios from "axios";
 
 function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
   const navigate = useNavigate();
-  const { setUser } = useAuth();
 
-  const handleLogin = async (event) => {
-    event.preventDefault();
-    const response = await fetch("http://localhost:5000/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username, password }),
-    });
-    const data = await response.json();
-    if (data.success) {
-      setUser(data.user);
-      navigate("/landing");
-    } else {
-      setMessage("Invalid credentials");
-    }
+  const handleLogin = () => {
+    axios
+      .get("http://localhost:5000/login", {
+        params: {
+          username: username,
+          password: password,
+        },
+      })
+      .then((res) => {
+        console.log(res.data);
+        localStorage.setItem("id", res.data.user.id);
+      })
+      .catch((err) => {});
   };
 
   const handleToRegister = () => {
@@ -45,17 +41,14 @@ function Login() {
 
       <div className="lg:p-36 md:p-52 sm:20 p-8 w-full lg:w-1/2">
         <h1 className="text-2xl font-semibold mb-4">Welcome to ShoeSQL</h1>
-        <form onSubmit={handleLogin}>
+        <div>
           <div className="mb-4">
-            <label for="username" className="block text-gray-600">
-              Username
-            </label>
+            <label className="block text-gray-600">Username</label>
             <input
               type="text"
               id="username"
               name="username"
               className="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-blue-500"
-              autocomplete="off"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               required
@@ -63,15 +56,12 @@ function Login() {
           </div>
 
           <div className="mb-4">
-            <label for="password" className="block text-gray-600">
-              Password
-            </label>
+            <label className="block text-gray-600">Password</label>
             <input
               type="password"
               id="password"
               name="password"
               className="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-blue-500"
-              autocomplete="off"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
@@ -85,18 +75,17 @@ function Login() {
               name="remember"
               className="text-blue-500"
             />
-            <label for="remember" className="text-gray-600 ml-2">
-              Remember Me
-            </label>
+            <label className="text-gray-600 ml-2">Remember Me</label>
           </div>
 
           <button
             type="submit"
             className="bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-md py-2 px-4 w-full"
+            onClick={handleLogin}
           >
             Login
           </button>
-        </form>
+        </div>
 
         <div className="mt-6 text-blue-500 text-center">
           <a href="" className="hover:underline" onClick={handleToRegister}>

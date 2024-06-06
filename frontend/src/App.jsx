@@ -7,6 +7,7 @@ import Profile from "./Profile";
 import Login from "./Login"; // Import Login
 import Register from "./register";
 import Dummy from "./dummy";
+import InfoSepatu from "./InfoSepatu";
 
 function App() {
   return (
@@ -20,7 +21,7 @@ function App() {
           <Route path="/profile" element={<Profile />} />
           <Route path="/register" element={<Register />} />
           <Route path="/dummy" element={<Dummy />} />
-          
+          <Route path="/info/:id_sepatu" element={<InfoSepatu />} />
         </Routes>
       </Router>
     </AuthProvider>

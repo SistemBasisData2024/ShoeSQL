@@ -108,8 +108,10 @@ function LandingPage() {
           </div>
         </div>
       </nav>
-      <h1>Welcome to the ShoeSQL!</h1>
-      <p>You have successfully logged in.</p>
+      <div className="bg-white text-black font-bold">
+        <h1 className="">Welcome to the ShoeSQL!</h1>
+        <p>You have successfully logged in.</p>
+      </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-4">
         {shoes.map((shoe) => (
           <ShoeCard key={shoe.id_sepatu} shoe={shoe} />
