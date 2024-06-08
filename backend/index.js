@@ -1,4 +1,5 @@
 const express = require('express');
+const multer = require('multer');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const pool = require('./db/db');
@@ -7,6 +8,7 @@ const PgSession = require('connect-pg-simple')(session);
 const Pool = require('pg').Pool;
 const bcrypt = require('bcrypt');
 const app = express();
+const upload = multer({ dest: 'uploads/' });
 const PORT = 5000;
 
 app.use(cors());
@@ -115,12 +117,13 @@ app.get('/shoes', async (req, res) => {
   }
 });
 
-app.post('/shoes', async (req, res) => {
+app.post('/shoes', upload.single('image'), async (req, res) => {
   const { name, brand, price } = req.body;
+  const image = req.file ? req.file.path : null;
   try {
     const result = await pool.query(
-      'INSERT INTO sepatu (nama, brand, harga) VALUES ($1, $2, $3) RETURNING *',
-      [name, brand, price]
+      'INSERT INTO sepatu (nama, brand, harga, gambar) VALUES ($1, $2, $3, $4) RETURNING *',
+      [name, brand, price, image]
     );
     res.status(201).json(result.rows[0]);
   } catch (error) {

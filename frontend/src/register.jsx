@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useAuth } from './AuthContext';
-import { Navigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 
 function Register() {
   const [username, setUsername] = useState('');
@@ -11,6 +11,7 @@ function Register() {
   const [loading, setLoading] = useState(false);
   const { setUser } = useAuth();
   const [redirectToLogin, setRedirectToLogin] = useState(false);
+  const navigate = useNavigate(); // Define navigate here
 
   const handleRegister = async (e) => {
     e.preventDefault();
@@ -39,10 +40,12 @@ function Register() {
     }
 
     if (redirectToLogin) {
-      navigate('/');
+      navigate('/'); // Correct use of navigate here
     }
-    
-    
+  };
+
+  const handleToHome = () => {
+    navigate('/'); // Correct use of navigate here
   };
 
   return (
@@ -80,7 +83,8 @@ function Register() {
           />
         </div>
         {error && <div style={{ color: 'red' }}>{error}</div>}
-        <button onClick={handleRegister} type="submit" disabled={loading}>
+        <button type="button" onClick={handleToHome}>Back to Login</button>
+        <button type="submit" disabled={loading}>
           {loading ? 'Registering...' : 'Register'}
         </button>
       </form>
