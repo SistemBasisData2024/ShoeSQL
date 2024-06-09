@@ -53,7 +53,7 @@ The class table is used to store the data of the ```class``` on the website. Thi
 ### Relation Table and UML
 
 ```Table Relational or ERD:```
-  ![ERD](https://github.com/varrel123/Proyek-Akhir-SBD/blob/f1fffbf23515ca02e517d5f107b8cc4c2e47fb25/Table%20relational.png)
+  ![ERD](https://github.com/SistemBasisData2024/ShoeSQL/blob/main/ERD.jpg)
 
 ```UML:```
   ![ERD](https://github.com/SistemBasisData2023/IronPulse/blob/646756f9b885256f35cbc75bce8b0377ada843b9/UML.jpg)
