@@ -61,4 +61,4 @@ The class table is used to store the data of the ```class``` on the website. Thi
 ### Flowchart View
 
 ```Flowchart```
-  ![Flowchart]
+  ![Flowchart](https://github.com/SistemBasisData2024/ShoeSQL/blob/main/Flowchart.jpg)
